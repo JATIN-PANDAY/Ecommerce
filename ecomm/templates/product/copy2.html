@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+
+<head>
+   <!-- basic -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- mobile metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- site metas -->
+   <title>Eflyer</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!-- bootstrap css -->
+   <link rel="stylesheet" type="text/css" href="{% static 'app/css/bootstrap.min.css'%}">
+   <!-- style css -->
+   <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css'%}">
+   <!-- Responsive-->
+   <link rel="stylesheet" href="{% static 'app/css/responsive.css'%}">
+   <!-- fevicon -->
+   <link rel="icon" href="{% static 'app/images/fevicon.png'%}" type="image/gif" />
+   <!-- Scrollbar Custom CSS -->
+   <link rel="stylesheet" href="{% static 'app/css/jquery.mCustomScrollbar.min.css'%}">
+   <!-- Tweaks for older IEs-->
+   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+   <!-- fonts -->
+   <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+   <!-- font awesome -->
+   <link rel="stylesheet" type="text/css"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+   <!--  -->
+   <!-- owl stylesheets -->
+   <link href="https://fonts.googleapis.com/css?family=Great+Vibes|Poppins:400,700&display=swap&subset=latin-ext"
+      rel="stylesheet">
+   <link rel="stylesheet" href="{% static 'app/css/owl.carousel.min.css'%}">
+   <link rel="stylesoeet" href="{% static 'app/css/owl.theme.default.min.css'%}">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+      media="screen">
+
+   <style>
+      .img-fluid {
+
+         height: 500px;
+         width: 400px;
+
+      }
+
+      .img-responsive {
+         height: 70px;
+         width: 60px;
+
+      }
+   </style>
+
+
+</head>
+
+<!-- ============================ COMPONENT 1 ================================= -->
+
+<body>
+   <div class="card mt-5">
+      <div class="row no-gutters mt-5">
+         <aside class="col-md-6">
+            <article class="gallery-wrap">
+               <div class="img-big-wrap">
+               
+                  <div class="container">
+                     {%if color%}
+                     <a href="/media/{{color.product_image.image}}">
+                        <img src="/media/{{color.product_image.image}}" class="img-fluid">
+                     </a>
+                     {%else%}
+                     <a href="/media/{{product.image}}">
+                        <img src="/media/{{product.image}}" class="img-fluid">
+                     </a>
+                     {%endif%}
+                     
+                     
+                  </div>
+               </div>
+
+                 
+
+               <!-- slider-nav.// -->
+            </article> <!-- gallery-wrap .end// -->
+         </aside>
+         <main class="col-md-6 border-left">
+            <article class="content-body">
+
+               <h2 class="title">{{product.product_name}}</h2>
+               <dd class="col-sm-9">{{product.product_description}} </dd>
+               <div class="rating-wrap my-3">
+
+                  {% if messages %}
+                  {% for message in messages %}
+                  <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                     {{message}}
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  <small class="label-rating text-muted">132 reviews</small>
+                  <small class="label-rating text-success"> <i class="fa fa-clipboard-check"></i> 154 orders </small>
+               </div> <!-- rating-wrap.// -->
+
+               <div class="mb-3">
+                  <var class="price h4">Price : Rs
+
+                     <!-- Size and color price filteration -->
+
+
+                     {% if updated_price or color_price  %}
+                     {{updated_price}}
+                     {{color_price}}
+
+                     {%else%}
+                     {{product.price}}
+
+                     {%endif%}
+           
+                .00
+                  
+
+               
+               
+                  </var>
+
+               </div> <!-- price-detail-wrap .// -->
+
+               <p>{{product.product_desription}}</p>
+
+
+               <dl class="row">
+                  <dt class="col-sm-3">Model</dt>
+                  <dd class="col-sm-9"><b>{{product.model_name}}</b></dd>
+
+                  {%if color_variant%}
+
+                  <dt class="col-sm-4">Color</dt>
+
+                  {%for color in color_variant%}
+
+                  <dd class="col-sm-2">
+
+                     
+                       <input class="form-check-input" type="radio" name="select_color"  onchange="get_price_by_color('{{color.color_name}}')" {% if select_color == color.color_name %} checked {%endif%} id="flexCheckDefault" required>
+                       {{color.color_name}}
+                       <!-- <a href="" name="select_color"  onchange="get_price_by_color('{{color.color_name}}')"> -->
+
+                        <!-- <img src="/media/{{color.product_image.image}}" class="img-responsive"> -->
+                        
+                        </a>
+                  </dd>
+                  {%endfor%}
+                  {%endif%}
+
+                  
+
+
+               </dl>
+               <form method="post" action="{% url 'add_to_Cart' product.uid  %}?color={{select_color}} ">
+                  {%csrf_token%}
+
+               <div class="form-row ml-0 ">
+                  <label><b>Size : </b></label>
+                  {% for size in size_variant %}
+                  
+                  <div class="form-check ml-3">
+
+                     <input class="form-check-input" type="radio" name="select_size" value="{{size.uid}}"  id="flexRadioDefault1">
+                     <label class="form-check-label" for="flexCheckChecked">
+                        <b>{{size.size_name}}</b>
+                     </label>
+
+                  </div>
+                  {%endfor%}
+               </div>
+
+              
+
+
+
+               <hr>
+               <div class="form-row">
+                  <div class="form-group col-md-4 flex-grow-0">
+                     <label><b>Quantity</b></label>
+                     <div class="input-group mb-3 input-spinner">
+                        <div class="input-group-prepend">
+                           <button class="btn btn-light" type="button" id="button-plus"> + </button>
+                        </div>
+                        <input type="text" class="form-control" value="1">
+                        <div class="input-group-append">
+                           <button class="btn btn-light" type="button" id="button-minus"> − </button>
+                        </div>
+                     </div>
+                  </div> <!-- col.// -->
+                  
+                  <!-- col.// -->
+               </div> <!-- row.// -->
+            <button class="btn  btn-outline-primary"> Add to cart<span
+               class="text"></span> <i class="fas fa-shopping-cart"></i> </button>
+
+               </form>
+               <form action="{% url 'order_process' product.uid %}?color={{select_color}}" method="post">  
+                  {%csrf_token%}             
+                  <button class="btn  btn-outline-success"> Buy now </button>
+               </form>
+               <a href="{% url 'index'%}" class="btn  btn-outline-dark"> <span class="text">Back</span> </a>
+
+            </article> <!-- product-info-aside .// -->
+         </main> <!-- col.// -->
+      </div> <!-- row.// -->
+   </div> <!-- card.// -->
+   <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+
+   </div>
+   </section>
+
+
+<script>
+
+
+   function get_price_by_color(color){
+
+      window.location.href = window.location.pathname + `?color=${color}`
+   
+   }
+
+
+   /*function get_correct_price(size){
+      
+
+      window.location.href = window.location.pathname + `?size=${size}`
+
+ 
+   }*/
+
+   
+</script>
+
+
+   <!-- Javascript files-->
+   <script src="{% static 'app/js/jquery.min.js'%}"></script>
+   <script src="{% static 'app/js/popper.min.js'%}"></script>
+   <script src="{% static 'app/js/bootstrap.bundle.min.js'%}"></script>
+   <script src="{% static 'app/js/jquery-3.0.0.min.js'%}"></script>
+   <script src="{% static 'app/js/plugin.js'%}"></script>
+   <!-- sidebar -->
+   <script src="{% static 'app/js/jquery.mCustomScrollbar.concat.min.js'%}"></script>
+   <script src="{% static 'app/js/custom.js'%}"></script>
+
+</body>
+
+</html>

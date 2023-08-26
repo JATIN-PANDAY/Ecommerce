@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+{%load static%}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eflyer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    
+    <style>
+      @import url(http://fonts.googleapis.com/css?family=Calibri:400,300,700);
+
+body {
+    background-color: #eee;
+    font-family: 'Calibri', sans-serif !important;
+}
+
+.mt-100{
+   margin-top:100px;
+
+}
+
+
+.card {
+    margin-bottom: 30px;
+    border: 0;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    letter-spacing: .5px;
+    border-radius: 8px;
+    -webkit-box-shadow: 1px 5px 24px 0 rgba(68,102,242,.05);
+    box-shadow: 1px 5px 24px 0 rgba(68,102,242,.05);
+}
+
+.card .card-header {
+    background-color: #fff;
+    border-bottom: none;
+    padding: 24px;
+    border-bottom: 1px solid #f6f7fb;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-header:first-child {
+    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+}
+
+
+
+.card .card-body {
+    padding: 30px;
+    background-color: transparent;
+}
+
+.btn-primary, .btn-primary.disabled, .btn-primary:disabled {
+    background-color: #4466f2!important;
+    border-color: #4466f2!important;
+}
+      .img-fluid{
+        height: 80px;
+        width: 70px;
+      }
+      .btn-secondry{
+        background-color: white;
+        border: 0px solid black;
+        margin-top: 30px;
+        margin-left: 50%;
+      }
+
+      
+    </style>
+
+
+
+    
+</head>
+  <body>
+    {% if msg%}
+    <div class="container-fluid  mt-100">
+      <div class="row">
+      
+       <div class="col-md-12">
+       
+           <div class="card">
+         <div class="card-header">
+         <h5>Cart</h5>
+         </div>
+         <div class="card-body cart">
+             <div class="col-sm-12 empty-cart-cls text-center">
+               <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4 mr-3">
+               <h3><strong>{{msg}}</strong></h3>
+               <h4>Add something to make me happy :)</h4>
+               <a href="/" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
+               
+             
+             </div>
+         </div>
+     </div>
+         
+       
+       </div>
+      
+      </div>
+     
+     </div>
+    
+    {%else%}
+
+    <section class="section">
+    <div class="container">
+        <table class="table">
+            <thead>
+              <tr>
+                <th><abbr title="Position"></abbr></th>
+                <th>Product Name</th>
+                <th><abbr title="Played">Color</abbr></th>
+                <th><abbr title="Played">Size</abbr></th>
+                <th><abbr title="Won">Price</abbr></th>
+                <th><abbr title="Drawn">Image</abbr></th>
+                <th><abbr title="Drawn">Action</abbr></th>
+                
+              </tr>
+            </thead>
+            <tfoot>
+             
+            <tbody>
+                {% for cart in cart.cartitems.all %}
+
+              <tr>
+                <th>{{forloop.counter}}</th>
+                
+                <td>{{cart.product}}</td>
+                <td>{{cart.color_variant}}</td>
+                <td>{{cart.size_variant}}</td>
+                
+                <td>
+                
+                  {{cart.get_product_price}}
+                
+                </td>
+                {%if cart.color_variant%}
+                <td><img src="{{MEDIA_URL}}{{cart.color_variant.product_image.image.url}}"class="img-fluid" ></td>
+            
+            {%else%}
+            <td><img src="{{MEDIA_URL}}{{cart.product.image.url}}"class="img-fluid" ></td>
+
+                {%endif%}
+                
+                <td><a href="{% url 'cart_delete' uid=cart.uid %}"><button class="btn btn-danger">Remove</button></td>
+              </tr>
+              {%endfor%}
+              <tr scope="row"></tr>
+
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                
+                  <td>
+                    <button class='btn btn-secondry'  ><b>Total Price:{{cart.get_cart_total}}</b></button>     
+                  </td>
+ 
+  </div>
+                
+            </tbody>
+            
+            </tfoot>
+          </table>
+    </div>
+  </section>
+    {%endif%}
+
+  
+
+</body>
+</html>
