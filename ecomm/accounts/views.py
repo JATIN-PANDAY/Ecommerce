@@ -10,6 +10,7 @@ from product.models import *
 from datetime import datetime,timedelta
 import regex as re
 # from home import views
+from base.emails import reset_password
 
 
 from django.conf import settings    
@@ -119,6 +120,113 @@ def logout(request):
     response.delete_cookie('uid')
     response.delete_cookie('password')
     return response
+
+
+############ Forget Password ####################
+
+def forgetpassword(request):
+    try:
+        if request.method=='POST':
+            email=request.POST.get('email')
+            uid=request.POST.get('uid')
+            user=User.objects.get(email=email)
+            if user:
+
+                # profile=Profile.objects.filter(user=user)
+                response=HttpResponseRedirect(request.path_info)
+                # response= redirect('/account/Setforgetpassword')
+                response.set_cookie('email',user.email,expires=datetime.utcnow()+timedelta(days=1))    
+                response.set_cookie('uid',user.uid,expires=datetime.utcnow()+timedelta(days=1))
+                reset_password(email)    
+                # print(email)
+                messages.success(request,'An mail is sent.')
+
+                return response
+            else:
+                messages.warning(request,'Email incorrect.')
+                return HttpResponseRedirect(request.path_info)
+    except Exception as e:
+
+            messages.warning(request,'Email incorrect.')
+            return HttpResponseRedirect(request.path_info)
+    return render(request,'accounts/email.html')
+
+
+def Setforgetpassword(request):
+    if 'uid' in request.COOKIES and 'email' in request.COOKIES:
+            email=request.COOKIES['email']
+            uid=request.COOKIES['uid']
+            user = User.objects.get(uid=uid)
+            profile = Profile.objects.get(user=user)
+            
+    if request.method=='POST':
+        password=request.POST.get('password')
+        cpassword=request.POST.get('cpassword')
+        if password==cpassword:
+            password_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+                    
+            if re.match(password_pattern,password):
+                user.password=password
+                user.save()
+                    
+                messages.success(request,'Your password change.')
+                return redirect('/account/login')
+                    
+            else:
+                messages.warning(request,'Password is too short')
+                return HttpResponseRedirect(request.path_info)
+
+        else:
+            messages.warning(request,'Password and confirm password not match')
+            return HttpResponseRedirect(request.path_info)
+    # except Exception as e:
+    #     print(e)
+    return render(request,'accounts/passwordchange.html')
+
+
+
+
+
+
+
+
+
+    # try:
+    #     if 'uid' in request.COOKIES and 'email' in request.COOKIES:
+    #         email=request.COOKIES['email']
+    #         uid=request.COOKIES['uid']
+    #         user = User.objects.get(uid=uid)
+    #         profile = Profile.objects.get(user=user)
+            
+    #         if request.method=='POST':
+    #             password=request.POST.get('password')
+    #             cpassword=request.POST.get('cpassword')
+    #             if password==cpassword:
+    #                 password_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+                    
+    #                 if re.match(password_pattern,password):
+    #                     user.password=password
+    #                     user.save()
+                    
+    #                     messages.success(request,'Your password change.')
+    #                     return redirect('/account/login')
+                    
+    #                 else:
+    #                     messages.warning(request,'Password is too short')
+    #                     return HttpResponseRedirect(request.path_info)
+
+    #             else:
+    #                 messages.warning(request,'Password and confirm password not match')
+    #                 return HttpResponseRedirect(request.path_info)
+    # except Exception as e:
+    #     print(e)
+    # return render(request,'accounts/passwordchange.html')
+
+        
+
+
+
+
 
 # Adding add to cart functionality
 

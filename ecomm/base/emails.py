@@ -15,3 +15,16 @@ def send_account_activation_email(email , email_token):
         send_mail(subject , message , email_from , recipient_list)
     except Exception as e:
         print(e)
+
+
+
+def reset_password(email):
+    try:
+        # return
+        subject = 'Reset Password'
+        email_from = settings.EMAIL_HOST_USER
+        message = f'Hi, click on the link to reset your password http://127.0.0.1:8000/account/Setforgetpassword'
+        recipient_list = [email]
+        send_mail(subject , message , email_from , recipient_list)
+    except Exception as e:
+        print(e)
