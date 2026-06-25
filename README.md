@@ -211,9 +211,8 @@ Eflyer is suitable for:
 
 **Jatin Panday**
 - 📧 jatinpanday136@gmail.com
-- 💼 [LinkedIn](https://linkedin.com/in/yourprofile)
-- 🐙 [GitHub](https://github.com/yourusername)
-- 🌐 [Portfolio](https://yourportfolio.com)
+- 💼 [LinkedIn](https://www.linkedin.com/in/jatin-panday/)
+- 🐙 [GitHub](https://github.com/JATIN-PANDAY)
 
 ---
 
